@@ -166,6 +166,7 @@ This project demonstrates:
 
 ## Author
 Salvador Lugo
+Salvador Lugo
 Created as part of CS131 coursework demonstrating binary tree and AVL tree concepts.
 
 ## License
