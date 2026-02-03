@@ -55,14 +55,13 @@ This project demonstrates a fully functional AVL tree with insertion, deletion, 
 
 ```
 BinaryTreeExam/
-├── src/
-│   └── binaryTreeExam/
-│       ├── BinaryTree.java        # Core AVL tree implementation
-│       ├── TreeDisplayer.java     # Visualization and display logic
-│       ├── BinaryTreeMenu.java    # User interface and main entry point
-│       └── package-info.java      # Package documentation
-├── LICENSE                          # MIT License
-└── README.md                        # README FILE
+└── src/
+   └── binaryTreeExam/
+       ├── BinaryTree.java        # Core AVL tree implementation
+       ├── TreeDisplayer.java     # Visualization and display logic
+       ├── BinaryTreeMenu.java    # User interface and main entry point
+       └── package-info.java      # Package documentation
+                                  # Compiled class files
 ```
 
 ## Key Components
