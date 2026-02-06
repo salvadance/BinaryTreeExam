@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Menu-driven interface for interacting with an AVL binary search tree.
+ * Menu-driven interface for interacting with an AVL AVL search tree.
  * 
  * Provides functionality to:
  * - Add and remove nodes from the tree
@@ -18,19 +18,19 @@ import java.util.Scanner;
  * automatically through AVL rebalancing operations.
  */
 
-public class BinaryTreeMenu {
-	private BinaryTree tree;
+public class AVLTreeMenu {
+	private AVLTree tree;
 	private TreeDisplayer displayer;
 	private boolean isTreeReversed;
 	private static final int MAX_NUMBER_OF_VALUES = (1 << 4) - 1;
 	private int numOfValues;
 	
 	/**
-	 * Constructs a BinaryTreeMenu with an empty AVL tree and TreeDisplayer.
+	 * Constructs a AVLTreeMenu with an empty AVL tree and TreeDisplayer.
 	 * Initializes the tree as non-reversed with zero values
 	 */
-	public BinaryTreeMenu() {
-		tree = new BinaryTree();
+	public AVLTreeMenu() {
+		tree = new AVLTree();
 		displayer = new TreeDisplayer(tree);
 		isTreeReversed = false;
 		numOfValues = 0;
@@ -104,7 +104,7 @@ public class BinaryTreeMenu {
 			
 			//If maximum values reached then display message and break loop
 			if (numOfValues >= MAX_NUMBER_OF_VALUES) {
-				System.out.println("\nLimit of " + MAX_NUMBER_OF_VALUES + " reached for number of elements in binary tree\n\n");
+				System.out.println("\nLimit of " + MAX_NUMBER_OF_VALUES + " reached for number of elements in AVL tree\n\n");
 				break;
 			}
 			
@@ -121,7 +121,7 @@ public class BinaryTreeMenu {
 					if (tree.insert(numToAdd)) { // Call helper method and get its return boolean value if was insertered or duplicate
 						++numOfValues;
 						System.out.println(numToAdd + " added!");
-						System.out.println(numOfValues + " / " + MAX_NUMBER_OF_VALUES + " of values in binary tree");
+						System.out.println(numOfValues + " / " + MAX_NUMBER_OF_VALUES + " of values in AVL tree");
 					}
 					else {
 						System.out.println(numToAdd + " already exists in the AVL tree");
@@ -165,7 +165,7 @@ public class BinaryTreeMenu {
 				if (!tree.isEmpty()) {
 					
 					//Prompt user to enter key/node to remove
-					System.out.println(numOfValues + " / " + MAX_NUMBER_OF_VALUES + " of values in binary tree");
+					System.out.println(numOfValues + " / " + MAX_NUMBER_OF_VALUES + " of values in AVL tree");
 					System.out.println("Enter a key to remove: ");
 					numberToRemove = scnr.nextInt();
 					scnr.nextLine();
@@ -177,7 +177,7 @@ public class BinaryTreeMenu {
 						if (tree.remove(numberToRemove)) {
 							System.out.println("key " + numberToRemove + " successfully removed!");
 							--numOfValues;
-							System.out.println(numOfValues + " / " + MAX_NUMBER_OF_VALUES + " of values in binary tree\n\n");
+							System.out.println(numOfValues + " / " + MAX_NUMBER_OF_VALUES + " of values in AVL tree\n\n");
 							
 						}
 						else {
@@ -275,28 +275,28 @@ public class BinaryTreeMenu {
 	 * Shows all available operations with their corresponding character codes.
 	 */
 	private void printMenu() {
-		System.out.println("Binary Tree Menu");
+		System.out.println("AVL Tree Menu");
 		System.out.println("'a' -- add a number");
 		System.out.println("'f' -- get family info");
-		System.out.println("'r' -- reverse binary tree");
+		System.out.println("'r' -- reverse AVL tree");
 		System.out.println("'l' -- print tree flipped");
 		System.out.println("'i' -- initialize tree with random values");
-		System.out.println("'p' -- print binary tree");
-		System.out.println("'s' -- print binary tree stats");
+		System.out.println("'p' -- print AVL tree");
+		System.out.println("'s' -- print AVL tree stats");
 		System.out.println("'d' -- delete a node/key");
 		System.out.println("'c' -- clear tree");
 		System.out.println("'q' -- quit");
 	}
 
 	/**
-	 * Entry point for the binary tree application.
+	 * Entry point for the AVL tree application.
 	 * Creates a menu instance and starts the interactive menu loop
 	 * 
 	 * @param args command-line arguments (not used)
 	 */
 	public static void main(String[] args) {
 		Scanner scnr = new Scanner(System.in);
-		BinaryTreeMenu menu = new BinaryTreeMenu();
+		AVLTreeMenu menu = new AVLTreeMenu();
 		menu.menuSelection(scnr);
 		
 	}

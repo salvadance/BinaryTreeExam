@@ -6,19 +6,19 @@ import java.util.Scanner;
 
 
 public class TreeDisplayer {
-	/** The binary tree to be displayed */
-	private BinaryTree tree;
+	/** The AVL tree to be displayed */
+	private AVLTree tree;
 	
 	/** ArrayList storing node values organized by tree level for display purposes */
 	private ArrayList<ArrayList<Integer>> levelValues;
 	
 	/**
-	 * Constructs a TreeDisplayer for visualizing the given binary tree.
+	 * Constructs a TreeDisplayer for visualizing the given AVL tree.
 	 * Initializes the levelValues ArrayList for storing nodes organized by tree level.
 	 * 
-	 * @param tree the BinaryTree to be displayed
+	 * @param tree the AVLTree to be displayed
 	 */
-	public TreeDisplayer(BinaryTree tree) {
+	public TreeDisplayer(AVLTree tree) {
 		this.tree = tree;
 		levelValues = new ArrayList<>();
 	}
@@ -28,7 +28,7 @@ public class TreeDisplayer {
 	 * Performs a post-order traversal, adding children before parents. Null nodes are added
 	 * as null values to maintain positional structure for visual tree representation.
 	 * 
-	 * The method ensures complete binary tree structure by recursively adding null children 
+	 * The method ensures complete AVL tree structure by recursively adding null children 
 	 * for null nodes up to maxHeight, which preserves the spacing needed for display.
 	 * @param height the current height/level in the tree (0 for root)
 	 * @param node the current node being traversed or processed (can be null)
@@ -59,8 +59,8 @@ public class TreeDisplayer {
 	}
 	
 	/**
-	 * Entry method to display binary tree in normal orientation, root is on top.
-	 * Checks if binary tree is empty first an displays a message stating so.
+	 * Entry method to display AVL tree in normal orientation, root is on top.
+	 * Checks if AVL tree is empty first an displays a message stating so.
 	 * Calls method to fill the levelValues ArrayList
 	 * Based on isReversed value call appropriate method to display tree non-reversed or reversed
 	 * Finally clears array list.
@@ -88,7 +88,7 @@ public class TreeDisplayer {
 	 * leftSpacePadding is the amount of white space on the left of the leftmost value in the tree
 	 * It is calculated by determining the levelNums which is the most possible number of nodes at the bottom most level.
 	 * Then multiplying levelNums by 2 and subtracting by one and dividing all by 2. That initial value is for spacing on the left for the root node.
-	 * Since the binary tree is set up to take values up to 4 digits, a single space is four white-spaces. 
+	 * Since the AVL tree is set up to take values up to 4 digits, a single space is four white-spaces. 
 	 * So the output area is divided into a grid 4x1 blocks, 4 spaces wide by 1 space tall. The betweenNodeSpaces is initialized to an arbitrary value of zero.
 	 * During each iteration of each tree level:
 	 * 			-The operation to display the spacing on the left of current tree level is performed via for loop.
@@ -168,7 +168,7 @@ public class TreeDisplayer {
 	 * leftSpacePadding is the amount of white space on the left of the leftmost value in the tree.
 	 * It is calculated by determining the levelNums which is the most possible number of nodes at the bottom most level.
 	 * Then multiplying levelNums by 2 and subtracting by one and dividing all by 2. That initial value is for spacing on the left for the root node.
-	 * Since the binary tree is set up to take values up to 4 digits, a single space is four white-spaces. 
+	 * Since the AVL tree is set up to take values up to 4 digits, a single space is four white-spaces. 
 	 * So the output area is divided into a grid 4x1 blocks, 4 spaces wide by 1 space tall. The betweenNodeSpaces is initialized to an arbitrary value of zero.
 	 * During each iteration of each tree level:
 	 * 			-The operation to display the spacing on the left of current tree level is performed via for loop.
@@ -241,8 +241,8 @@ public class TreeDisplayer {
 	}
 	
 	/**
-	 * Entry method to display binary tree in flipped orientation, root is on bottom.
-	 * Checks if binary tree is empty first an displays a message stating so.
+	 * Entry method to display AVL tree in flipped orientation, root is on bottom.
+	 * Checks if AVL tree is empty first an displays a message stating so.
 	 * Calls method to fill the levelValues ArrayList
 	 * Based on isReversed value call appropriate method to display tree non-reversed or reversed
 	 * Finally clears array list.
@@ -271,7 +271,7 @@ public class TreeDisplayer {
 	 * leftSpacePadding is the amount of white space on the left of the leftmost value in the tree
 	 * It is calculated by determining the levelNums which is the most possible number of nodes at the bottom most level.
 	 * Then multiplying levelNums by 2 and subtracting by one and dividing all by 2. That initial value is for spacing on the left for the root node.
-	 * Since the binary tree is set up to take values up to 4 digits, a single space is four white-spaces.    
+	 * Since the AVL tree is set up to take values up to 4 digits, a single space is four white-spaces.    
 	 * So the output area is divided into a grid 4x1 blocks, 4 spaces wide by 1 space tall. The betweenNodeSpaces is initialized to an arbitrary value of zero.
 	 * The leftSpacePadding and betweenNodeSpaces values grow larger as the tree is printed from bottom to top.
 	 * leftSpacePadding starts at 0 and betweenNodeSpaces starts at 1.
@@ -314,7 +314,7 @@ public class TreeDisplayer {
 			}
 
 		
-			for (int j= 0; j < levelValues.get(i).size(); j++) { // for loop to print a row of the binary tree
+			for (int j= 0; j < levelValues.get(i).size(); j++) { // for loop to print a row of the AVL tree
 				
 				numToAdd = levelValues.get(i).get(j); // get value at index
 
@@ -355,7 +355,7 @@ public class TreeDisplayer {
 	 * leftSpacePadding is the amount of white space on the left of the leftmost value in the tree.
 	 * It is calculated by determining the levelNums which is the most possible number of nodes at the bottom most level.
 	 * Then multiplying levelNums by 2 and subtracting by one and dividing all by 2. That initial value is for spacing on the left for the root node.
-	 * Since the binary tree is set up to take values up to 4 digits, a single space is four white-spaces.    
+	 * Since the AVL tree is set up to take values up to 4 digits, a single space is four white-spaces.    
 	 * So the output area is divided into a grid 4x1 blocks, 4 spaces wide by 1 space tall. The betweenNodeSpaces is initialized to an arbitrary value of zero.
 	 * The leftSpacePadding and betweenNodeSpaces values grow larger as the tree is printed from bottom to top.
 	 * leftSpacePadding starts at 0 and betweenNodeSpaces starts at 1.
@@ -389,7 +389,7 @@ public class TreeDisplayer {
 			}
 			
 		
-			for (int j= levelValues.get(i).size() - 1; j >= 0; --j) { // for loop to print a row of the binary tree
+			for (int j= levelValues.get(i).size() - 1; j >= 0; --j) { // for loop to print a row of the AVL tree
 				
 				numToAdd = levelValues.get(i).get(j); // get value at index
 
@@ -465,7 +465,7 @@ public class TreeDisplayer {
 	}
 	
 	/** Private helper method to print the family information of a node given its key.
-	 * Retrieves the node from the binary tree and prints its parent, left child,
+	 * Retrieves the node from the AVL tree and prints its parent, left child,
 	 * right child, and height. If the node does not exist, an appropriate message is displayed.
 	 * 
 	 * @param key the key of the node whose family information is to be printed
@@ -516,7 +516,7 @@ public class TreeDisplayer {
 		}
 	}
 	
-	/** Public method to print the binary tree's data in various orders:
+	/** Public method to print the AVL tree's data in various orders:
 	 * In-order, reversed order, and original insertion order.
 	 * If the tree is empty, it prints "Empty Tree".
 	 * It first clears the levelValues list, populates it with the tree's values,
@@ -552,7 +552,7 @@ public class TreeDisplayer {
 	
 	
 	/**
-	 * The private method of printing binary tree's data in reverse order
+	 * The private method of printing AVL tree's data in reverse order
 	 * @param node the starting or subtree node
 	 */
 	private void inOrderRec(Node root) {
@@ -565,7 +565,7 @@ public class TreeDisplayer {
 
 	
 	/**
-	 * The private method of printing binary tree's data in reverse order
+	 * The private method of printing AVL tree's data in reverse order
 	 * @param node the starting or subtree node
 	 */
 	private void reverseRec(Node node) {
