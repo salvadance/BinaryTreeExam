@@ -5,7 +5,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
-// TODO: [Add a functional interface for traversal to add to array]
 
 public class TreeDisplayer {
 	/** The AVL tree to be displayed */
@@ -27,70 +26,88 @@ public class TreeDisplayer {
 	}
 	
 	/**
-	 * FIXME: [Change logic now that Node class is inner private]
-
-	 * Recursively populates the levelValues ArrayList with node values organized by the tree level
-	 * Performs a post-order traversal, adding children before parents. Null nodes are added
+	 * Uses the traverseAllPreorder method that recursively populates the levelValues ArrayList with node values organized by the tree level.
+	 * Performs a pre-order traversal, meaning node is visited first before move to its children. Null nodes are added
 	 * as null values to maintain positional structure for visual tree representation.
-	 * The method ensures complete AVL tree structure by recursively adding null children 
-	 * for null nodes up to maxHeight, which preserves the spacing needed for display.
-	 * @param height the current height/level in the tree (0 for root)
-	 * @param node the current node being traversed or processed (can be null)
-	 * @param maxHeight the maximum height of the tree to process for helping process null nodes and no more past max height for spacing
+	 * 
+	 * traverseAllPreorder() parameters are a visitor method.
+	 * The lambda expression implements the DetailedVisitor's visit() method
+	 * 
+	 * This visitor approach was implemented to give flexibility on how to structure data from tree to be displayed.
+	 * In this case an ArrayList of ArrayList<Integer> type that keeps the binary tree structure by level.
+	 * 
+	 * Uses visitor design pattern. 
 	 */
 	private void addValuesToLevelValues() {
 		
-		if (tree == null || tree.isEmpty()) return;
+		if (tree == null || tree.isEmpty()) return; //Return is tree is null or empty
 		
-		int treeSize = tree.getTreeHeight() + 1;
-		levelValues.clear();
-		
-		
-		tree.traverseAllPreOrder((value, height) -> {
-			if (levelValues.size() <= height && height <= treeSize) levelValues.add(new ArrayList<Integer>());
+		levelValues.clear(); //Clear levelValues for safety
 			
-			levelValues.get(height).add(value);
+		tree.traverseAllPreOrder((value, level, maxLevel) -> { //Visitor implementation
+			if(level >= levelValues.size() && level <= maxLevel) levelValues.add(new ArrayList<Integer>());
+			
+			levelValues.get(level).add(value);
 		});
 		
 	}
 	
 	/**
-	 * Entry method to display AVL tree in normal orientation, root is on top.
+	 * Entry method to display AVL tree in flipped orientation, root is on bottom.
 	 * Checks if AVL tree is empty first an displays a message stating so.
 	 * Calls method to fill the levelValues ArrayList
-	 * Based on isReversed value call appropriate method to display tree non-reversed or reversed
+	 * Based on isReversed and isFLipped values, will call appropriate method to display tree non-reversed, reversed, flipped or not flipped
 	 * Finally clears array list.
 	 * @param isReversed if true that will call method that displays tree in reverse order bigger values on left and smaller values on right
+	 * @param isFlipped if true thatt will call method that displays tree in flipped orientation with root on the bottom
 	 */
-	public void printTreeNormalOrientation(boolean isReversed) {
+	public void printTree(boolean isReversed, boolean isFlipped) {
 		
-		if (tree == null || tree.isEmpty()) { // Base case tree is empty
+		if (tree == null || tree.isEmpty()) {
 			System.out.println("Tree is empty\n");
 			return;
 		}
 		
 		
-		addValuesToLevelValues(); // builds levelValues arraylist
+		addValuesToLevelValues();
 		
-		if (!isReversed) printTreeNormal(); // Call method to print tree normally 
-		else printTreeNormalReversed(); // else print tree reversed 
+		if (!isFlipped) {
+			if(!isReversed) printTreeNormal();
+			else printTreeNormalReversed();
+		}
+		else {
+			if(!isReversed) printTreeFlipped();
+			else printTreeFlippedReversed();
+			
+		}
+		
 		levelValues.clear();
 	}
 	
 	/**
-	 * TODO: [Rewrite to reflect changes]
 	 * Method that prints tree in normal orientation, root on top, and with smaller values on left and bigger.
 	 * leftSpacePadding is the amount of white space on the left of the leftmost value in the tree
 	 * It is calculated by determining the levelNums which is the most possible number of nodes at the bottom most level.
 	 * Then multiplying levelNums by 2 and subtracting by one and dividing all by 2. That initial value is for spacing on the left for the root node.
 	 * Since the AVL tree is set up to take values up to 4 digits, a single space is four white-spaces. 
-	 * So the output area is divided into a grid 4x1 blocks, 4 spaces wide by 1 space tall. The betweenNodeSpaces is initialized to an arbitrary value of zero.
+	 * So the output area is divided into a grid 4x1 blocks, 4 spaces wide by 1 space tall. 
+	 * The betweenNodeSpaces is initialized to an arbitrary value of zero.
+	 * 
+	 * Uses string build even though the number of nodes is limited, will help if limitation is increased. 
+	 * Great for not calling print as often which can add up/
+	 * 		For example:
+	 * 				At tree level 9 is 2^9 which is 512 elements
+	 * 				But the tree will have 2^(h+1)-1 nodes including null
+	 * 				2(9+1)-1 = 1023 calls
+	 * 
 	 * During each iteration of each tree level:
-	 * 			-The operation to display the spacing on the left of current tree level is performed via for loop.
-	 * 			-Inner for loop for each element at current tree level 
-	 * 				-Display either a value or "XXXX" if null.
-	 * 				-Then perform the operation for spacing between the nodes using a for loop iterating value of betweenNodeSpaces.
-	 * 			-At the end of each outer iteration betweenNodeSpaces is set to leftSpacePadding's value, which leftSpacePadding value
+	 * 			- The operation to display the spacing on the left of current tree level is performed via for loop.
+	 * 			- Calculating padding for both types
+	 * 			- Adding left padding to string builder
+	 * 			- Inner for loop for each element at current tree level 
+	 * 				- Add a either a value or "XXXX" if null along with between nodes padding to string builder.
+	 * 			- Print string builder
+	 * 			- At the end of each outer iteration betweenNodeSpaces is set to leftSpacePadding's value, which leftSpacePadding value
 	 * 			is divided by 2.
 	 * 
 	 */
@@ -170,16 +187,27 @@ public class TreeDisplayer {
 	 * It is calculated by determining the levelNums which is the most possible number of nodes at the bottom most level.
 	 * Then multiplying levelNums by 2 and subtracting by one and dividing all by 2. That initial value is for spacing on the left for the root node.
 	 * Since the AVL tree is set up to take values up to 4 digits, a single space is four white-spaces. 
-	 * So the output area is divided into a grid 4x1 blocks, 4 spaces wide by 1 space tall. The betweenNodeSpaces is initialized to an arbitrary value of zero.
+	 * So the output area is divided into a grid 4x1 blocks, 4 spaces wide by 1 space tall. 
+	 * The betweenNodeSpaces is initialized to an arbitrary value of zero.
+	 * 
+	 * Uses string build even though the number of nodes is limited, will help if limitation is increased. 
+	 * Great for not calling print as often which can add up/
+	 * 		For example:
+	 * 				At tree level 9 is 2^9 which is 512 elements
+	 * 				But the tree will have 2^(h+1)-1 nodes including null
+	 * 				2(9+1)-1 = 1023 calls
+	 * 
 	 * During each iteration of each tree level:
-	 * 			-The operation to display the spacing on the left of current tree level is performed via for loop.
-	 * 			-Inner for loop for each element at current tree level (in reverse order)
-	 * 				-Display either a value or "XXXX" if null.
-	 * 				-Then perform the operation for spacing between the nodes using a for loop iterating value of betweenNodeSpaces.
-	 * 			-At the end of each outer iteration betweenNodeSpaces is set to leftSpacePadding's value, which leftSpacePadding value
+	 * 			- The operation to display the spacing on the left of current tree level is performed via for loop.
+	 * 			- Calculating padding for both types
+	 * 			- Adding left padding to string builder
+	 * 			- Inner for loop for each element at current tree level 
+	 * 				- Add a either a value or "XXXX" if null along with between nodes padding to string builder.
+	 * 			- Print string builder
+	 * 			- At the end of each outer iteration betweenNodeSpaces is set to leftSpacePadding's value, which leftSpacePadding value
 	 * 			is divided by 2.
 	 */
-	public void printTreeNormalReversed() { //FIXME: Finish re-optimize
+	private void printTreeNormalReversed() {
 		
 		int treeHeight;
 		int levelNums; // number of possible values in each level
@@ -201,7 +229,7 @@ public class TreeDisplayer {
 		
 		betweenNodesAmount = 1; //initial spaces between nodes value is 1
 		
-
+		
 		//Iterate through each level of the tree
 		for (ArrayList<Integer> rowArray : levelValues) {
 			
@@ -210,31 +238,30 @@ public class TreeDisplayer {
 			leftPadding = SPACE.repeat(leftPaddingAmount);
 			betweenPadding = SPACE.repeat(betweenNodesAmount);
 			
-			
+			rowString.append(leftPadding);
 
-			//TODO: Add documentation
+			// iterate backward from tree
 			for (int j = rowArray.size() - 1; j >= 0; j--) {
 
 				numToAdd = rowArray.get(j); // Set get value 
 
-				//If has value then print format it
+				//If has value then append it format formatted
 				if (numToAdd != null) {
 					formatNumber(rowString, numToAdd);
 				} 
-				// Print out XXXX for null values
+				// append out XXXX for null values
 				else {
 					rowString.append("XXXX");
 				}
 
-				//Print out the number of a group of 4 spaces as many times of the value of betweenNodeSpaces
-				for (int k = 0; k < betweenNodesAmount; k++) {
-					System.out.print(SPACE);
-				}
-
+				//append 
+				rowString.append(betweenPadding);
 			}
 			
-			//FIXME: Add row to print it
-			System.out.println("\n\n");
+			rowString.append("\n\n");
+			
+			//print row
+			System.out.println(rowString.toString());
 			
 			betweenNodesAmount = leftPaddingAmount; // Spaces between nodes new value is set to value of left spacing
 			leftPaddingAmount /= 2; // left spacing new value is its value divided by 2
@@ -242,38 +269,35 @@ public class TreeDisplayer {
 			
 		}
 
-		System.out.println("\n");
 
 	}
+
 	
 	/**
-	 * Entry method to display AVL tree in flipped orientation, root is on bottom.
+	 * Entry method to display AVL tree in normal orientation, root is on top.
 	 * Checks if AVL tree is empty first an displays a message stating so.
 	 * Calls method to fill the levelValues ArrayList
 	 * Based on isReversed value call appropriate method to display tree non-reversed or reversed
 	 * Finally clears array list.
-	 * FIXME: [Add/Change method call to reflect new one once its built]
 	 * @param isReversed if true that will call method that displays tree in reverse order bigger values on left and smaller values on right
-	 */
-	public void printFlipped(boolean isReversed) {
+	 
+	public void printTreeNormalOrientation(boolean isReversed) {
 		
-		if (tree == null || tree.isEmpty()) {
+		if (tree == null || tree.isEmpty()) { // Base case tree is empty
 			System.out.println("Tree is empty\n");
 			return;
 		}
 		
-		//Node root = tree.getRoot();
-		// TODO: Add/Change method call
-		//addValuesToLevelValues(0, root, tree.getTreeHeight(root));
 		
-		if (!isReversed) printTreeFlipped();
-		else printTreeFlippedReversed();
+		addValuesToLevelValues(); // builds levelValues arraylist
 		
+		if (!isReversed) printTreeNormal(); // Call method to print tree normally 
+		else printTreeNormalReversed(); // else print tree reversed 
 		levelValues.clear();
 	}
+	*/
 
 	/**
-	 * TODO: [Change documentation to reflect new implementation]
 	 * Method that prints tree in flipped orientation, root on bottom, and with smaller values on left and bigger.
 	 * leftSpacePadding is the amount of white space on the left of the leftmost value in the tree
 	 * It is calculated by determining the levelNums which is the most possible number of nodes at the bottom most level.
@@ -285,34 +309,47 @@ public class TreeDisplayer {
 	 * betweenNodeSpaces increases by doubling its value and adding one each iteration.
 	 * 
 	 * XXXX    XXXX    XXXX    XXXX    XXXX    XXXX    XXXX    XXXX    XXXX    XXXX    XXXX    XXXX    5695    6314    8739    9805    
-           XXXX            XXXX            2708            XXXX            3755            4735            5934            9520            
-                   0961                            3268                            4623                            7337                            
-                                   2609                                                            5472                                                            
-                                                                   3605 
-	 * During each iteration of each tree level:
-	 * 			-The operation to display the spacing on the left of current tree level is performed via for loop.
-	 * 			-Inner for loop for each element at current tree level 
-	 * 				-Display either a value or "XXXX" if null.
-	 * 				-Then perform the operation for spacing between the nodes using a for loop iterating value of betweenNodeSpaces.
-	 * 			-At the end of each outer iteration betweenNodeSpaces is set to leftSpacePadding's value, which leftSpacePadding value
-	 * 			is divided by 2.
+     *
+     *     XXXX            XXXX            2708            XXXX            3755            4735            5934            9520            
+     *             
+     *             0961                            3268                            4623                            7337                            
+     *                              
+     *                             2609                                                            5472                                                            
+     *                                                              
+     *                                                             3605 
+	 * Uses string build even though the number of nodes is limited, will help if limitation is increased. 
+	 * Great for not calling print as often which can add up/
+	 * 		For example:
+	 * 				At tree level 9 is 2^9 which is 512 elements
+	 * 				But the tree will have 2^(h+1)-1 nodes including null
+	 * 				2(9+1)-1 = 1023 calls
 	 * 
+	 * During each iteration of each tree level:
+	 * 			- The operation to display the spacing on the left of current tree level is performed via for loop.
+	 * 			- Calculating padding for both types
+	 * 			- Adding left padding to string builder
+	 * 			- Inner for loop for each element at current tree level 
+	 * 				- Add a either a value or "XXXX" if null along with between nodes padding to string builder.
+	 * 			- Print string builder
+	 * 			- At the end of each outer iteration betweenNodeSpaces is set to leftSpacePadding's value, which leftSpacePadding value
+	 * 			is divided by 2.
 	 */
-	private void printTreeFlipped() { //FIXME: Re-optimize
+	private void printTreeFlipped() {
 		//Special case tree is empty
 		if (tree == null || tree.isEmpty()) return;
 		
-		int treeHeight;
-		int levelNums; // number of possible values in each level
 		int betweenNodesAmount; // Value for number of spaces between each node
 		int leftPaddingAmount; // value for spaces on the left of left most node
 		String betweenPadding;
 		String leftPadding;
-		final String SPACE = " ".repeat(BLOCK_SPACE_AMOUNT); // A space - 4 character spaces
+		final String SPACE = " ".repeat(BLOCK_SPACE_AMOUNT); // A space is 4 character spaces
 		ArrayList<Integer> rowArray;
 			
-		betweenNodesAmount = 1;
-		leftPaddingAmount = 0; 
+		
+
+		leftPaddingAmount = 0; //Calculate initial left spaces
+		
+		betweenNodesAmount = 1; //initial spaces between nodes value is 1
 		
 		
 		// while loop condition to make sure current level does not 
@@ -323,29 +360,26 @@ public class TreeDisplayer {
 			leftPadding = SPACE.repeat(leftPaddingAmount);
 			betweenPadding = SPACE.repeat(betweenNodesAmount);
 			
-			//FIXME: DELETEME
-			for (int j = 0; j < leftPaddingAmount; j++) { // for loop to print padding
-				System.out.print(SPACE);
-			}
+			rowString.append(leftPadding);
 			
 			rowArray = levelValues.get(i);
 			
-			//FIXME: Change print calls 
+			//Iterate the level
 			for (Integer numToAdd : rowArray) { // for loop to print a row of the AVL tree
 				
-
+				// format and append depending if non-null or not 
 				if (numToAdd != null) { // If-else to print if value is null or not
 					formatNumber(rowString, numToAdd);
 				} else {
 					rowString.append("XXXX");
 				}
 
-				rowString.append(betweenPadding);
+				rowString.append(betweenPadding); // put spaces between nodes in string
 				
 			}
 			
 			rowString.append("\n\n");
-			System.out.println(rowString);
+			System.out.println(rowString); //print row
 			
 			betweenNodesAmount = (betweenNodesAmount * 2) + 1; // recalculate spaces between nodes value
 			leftPaddingAmount = (leftPaddingAmount * 2) + 1; // recalculate spaces on left of leftmost node
@@ -353,15 +387,11 @@ public class TreeDisplayer {
 
 		}
 		
-
-		System.out.println("\n\n\n");
 		
 	}
 	
 	
-	/**
-	 * TODO: [Change documentation to reflect new implementation]
-	 * 
+	/** 
 	 * Method that prints tree in flipped orientation, root on bottom, and with bigger values on left and smaller.
 	 * This is the reversed display of printTreeFlipped(). The layout and spacing calculations are identical
 	 * to printTreeFlipped(), but the nodes at each level are printed in reverse order (right to left)
@@ -376,19 +406,26 @@ public class TreeDisplayer {
 	 * leftSpacePadding starts at 0 and betweenNodeSpaces starts at 1.
 	 * betweenNodeSpaces increases by doubling its value and adding one each iteration.
 	 * 
+	 * Uses string build even though the number of nodes is limited, will help if limitation is increased. 
+	 * Great for not calling print as often which can add up/
+	 * 		For example:
+	 * 				At tree level 9 is 2^9 which is 512 elements
+	 * 				But the tree will have 2^(h+1)-1 nodes including null
+	 * 				2(9+1)-1 = 1023 calls
+	 * 
 	 * During each iteration of each tree level:
-	 * 			-The operation to display the spacing on the left of current tree level is performed via for loop.
-	 * 			-Inner for loop for each element at current tree level (in reverse order)
-	 * 				-Display either a value or "XXXX" if null.
-	 * 				-Then perform the operation for spacing between the nodes using a for loop iterating value of betweenNodeSpaces.
-	 * 			-At the end of each outer iteration betweenNodeSpaces is set to leftSpacePadding's value, which leftSpacePadding value
+	 * 			- The operation to display the spacing on the left of current tree level is performed via for loop.
+	 * 			- Calculating padding for both types
+	 * 			- Adding left padding to string builder
+	 * 			- Inner for loop for each element at current tree level 
+	 * 				- Add a either a value or "XXXX" if null along with between nodes padding to string builder.
+	 * 			- Print string builder
+	 * 			- At the end of each outer iteration betweenNodeSpaces is set to leftSpacePadding's value, which leftSpacePadding value
 	 * 			is divided by 2.
 	 */
 	private void printTreeFlippedReversed() {
 		if (tree.isEmpty()) return;	
 		
-		int treeHeight;
-		int levelNums; // number of possible values in each level
 		int betweenNodesAmount; // Value for number of spaces between each node
 		int leftPaddingAmount; // value for spaces on the left of left most node
 		String betweenPadding;
@@ -397,10 +434,12 @@ public class TreeDisplayer {
 		Integer numToAdd;
 		ArrayList<Integer> rowArray;
 		
-		betweenNodesAmount = 1;
-		leftPaddingAmount = 0;
+
+		leftPaddingAmount = 0; //Calculate initial left spaces
 		
-		// while loop condition to make sure current level does not 
+		betweenNodesAmount = 1; //initial spaces between nodes value is 1
+		
+		// for loop to iterate array in reverse
 		for (int i = levelValues.size() - 1; i >= 0; --i ) { // while loop to print tree;
 			
 			//Initialize String Builder
@@ -415,6 +454,7 @@ public class TreeDisplayer {
 			
 			rowArray = levelValues.get(i);
 			
+			//Iterate by level in reverse
 			for (int j= rowArray.size() - 1; j >= 0; --j) { // for loop to create string of a row of the AVL tree
 				
 				numToAdd = rowArray.get(j); // get value at index
@@ -433,7 +473,7 @@ public class TreeDisplayer {
 			}
 			
 			rowString.append("\n\n");
-			System.out.println(rowString.toString());
+			System.out.println(rowString.toString()); // print row
 			
 			betweenNodesAmount = (betweenNodesAmount * 2) + 1; // recalculate the value for spaces between nodes
 			leftPaddingAmount = (leftPaddingAmount * 2) + 1; // recalculate the value for left spacing 
@@ -441,7 +481,6 @@ public class TreeDisplayer {
 
 		}
 
-		System.out.println("\n\n\n");
 	}
 	
 	/**
@@ -495,51 +534,46 @@ public class TreeDisplayer {
 	 * 
 	 * @param key the key of the node whose family information is to be printed
 	 */
-	private void printFamily(int key) { // FIXME: [Change reflect encapsulation of Node class]
+	private void printFamily(int key) {
 
-		//Call BSTSearch and set its Node return value to currNode
-		//currNode = tree.BSTSearch(tree.getRoot(), key);
-
-		tree.search(key, (value, parent, left, right, height) -> {
+		InfoExtractor info = tree.search(key);
+	
+		if (info != null && !info.isEmpty()) {
 			
-			if (value != null) {
-				
-				//Display family info
-
-				System.out.print("[" + key + "] :: ");
-
-				// Parent
-				System.out.print("Parent: ");
-				if (parent != null)
-					System.out.print(parent.toString() + " || ");
-				else
-					System.out.print("NULL || ");
-
-				// Left child
-				System.out.print("Left: ");
-				if (left != null)
-					System.out.print(left + " || ");
-				else
-					System.out.print("NULL || ");
-
-				// Right child
-				System.out.print("Right: ");
-				if (right != null)
-					System.out.print(right + " || ");
-				else
-					System.out.print("NULL || ");
-
-				// Height
-				System.out.print("Height: " + height);
-
-				System.out.print("\n\n");
-
-			}
-			//Node does not exist message
-			else {
-				System.out.println("Node with key [" + key + "] does not exist\n\n");
-			}
-		});
+			//Display family info
+			System.out.print("[" + info.getValue() + "] :: ");
+	
+			// Parent
+			System.out.print("Parent: ");
+			if (info.getParent() != null)
+				System.out.print(info.getParent() + " || ");
+			else
+				System.out.print("NULL || ");
+	
+			// Left child
+			System.out.print("Left: ");
+			if (info.getLeftChildValue() != null)
+				System.out.print(info.getLeftChildValue() + " || ");
+			else
+				System.out.print("NULL || ");
+	
+			// Right child
+			System.out.print("Right: ");
+			if (info.getRightChildValue() != null)
+				System.out.print(info.getRightChildValue() + " || ");
+			else
+				System.out.print("NULL || ");
+	
+			// Height
+			System.out.print("Height: " + info.getSubtreeHeight());
+	
+			System.out.print("\n\n");
+	
+		}
+		//Node does not exist message
+		else {
+			System.out.println("Node with key [" + key + "] does not exist\n\n");
+		}
 	}
 	
 	/** Public method to print the AVL tree's data in various orders:
@@ -547,76 +581,41 @@ public class TreeDisplayer {
 	 * If the tree is empty, it prints "Empty Tree".
 	 * It first clears the levelValues list, populates it with the tree's values,
 	 * and then calls helper methods to print the values in the specified orders.
-	 * FIXME: [Change method calls]
 	 */
 	public void printTreeOrders() {
+		
 		//Special case tree is empty
-		
-		
 		if (tree == null || tree.isEmpty()) {
 			System.out.println("Empty Tree");
+			return;
 		}
 		
-		levelValues.clear(); //Clear arraylist values
 		
-		// TODO: Change this method call
-		addValuesToLevelValues();
 		
 		//Print in ascending order
-		System.out.print("In Order [");
-		tree.traverseInOrder((value) -> {
-			System.out.print(value + ",");
-		});
-		System.out.print("]\n");
+		System.out.print("In Order: ");
+		System.out.println(tree.inOrderQueue().toString() + "\n");
 
 		//Print in descending order
-		System.out.print("Reversed [");
-		
-		//TODO: Change lambda logic to now call print so much
-		tree.traverseReverseOrder(value -> {
-			System.out.print(value + ", ");
-		});
-		System.out.print("]\n");
+		System.out.print("Reversed :");
+		System.out.println(tree.reverseOrderQueue().toString() + "\n");
 		
 		//Print in original order from root going down a level from left to right
-		System.out.print("Original order [");
-		printArrayAsIs();
-		System.out.println("]\n");
+		System.out.print("Pre order: ");
+		System.out.println(tree.preOrderQueue().toString() + "\n");
+		
+		//Print in original order from root going down a level from left to right
+		System.out.print("Post order: ");
+		System.out.println(tree.postOrderQueue().toString() + "\n");
+		
+		System.out.println("Tree Height " + tree.getTreeHeight());
+		System.out.println("Is tree balanced? " + tree.isAVLBalanced());
+		System.out.println("Balance Factor: " + tree.balanceFactor());
+		
 		System.out.println("\n\n");
-		levelValues.clear(); // clear arraylist
 	}
 	
 	
-	/**
-	 * The private method of printing AVL tree's data in reverse order
-	 * @param node the starting or subtree node
-	 
-	private void inOrderRec(Node node) {
-		if (node == null) return;
-		
-		inOrderRec(node.left);
-		System.out.print(node.key + ", ");
-		inOrderRec(node.right);
-	}
-	*/
-	
-	
-	/**
-	 * Private method to print the levelValues Array as it is stored in ascending order
-	 * Prints from level 0 or the root and left to right
-	 */
-	private void printArrayAsIs() {
-		Integer num;
-		for (int i = 0; i < levelValues.size(); i++) {
-			for (int j = 0; j < levelValues.get(i).size(); j++) {
-			num = levelValues.get(i).get(j);
-			if (num != null)
-				System.out.print(num + ", ");
-			}
-
-		}
-		
-	}
 	
 	/**
 	 * Appends the given number to sb as a zero-padded 4-digit field.
