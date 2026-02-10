@@ -256,7 +256,6 @@ public class AVLTree {
 
 	/**
 	 * Method that updates the subtree given a node as the root of the subtree
-	 * TODO: [Research: If made an accidental change]
 	 * @param node is the root of the subtree which height will be updated (root of subtree)
 	 */
 	private void treeUpdateHeight(Node node) {
@@ -484,7 +483,7 @@ public class AVLTree {
  */
 	
 
-	//TODO: [Change implementation using InfoNode class if it's been already created]
+
 	/**
 	 * Method that searches for a node's information given a key. It utilizes binary search specifically the Binary Search Tree algorithm for searching 
 	 * for a value. The algorithm searches until a matching key is found or a null node is reached.
