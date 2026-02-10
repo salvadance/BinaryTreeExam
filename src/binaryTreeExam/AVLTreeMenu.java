@@ -284,7 +284,7 @@ public class AVLTreeMenu {
 	 * @param selection the character entered by the user
 	 * @param scnr the Scanner object for reading user input.
 	 */
-	private void handleSelection(char selection, Scanner scnr) { //TODO: [Change logic so 'p' selection does all the printing]
+	private void handleSelection(char selection, Scanner scnr) { 
 		switch(selection) {
 			case 'a' -> addNumber(scnr);
 			case 'f' -> displayer.menuGetFamily(scnr);
@@ -306,8 +306,8 @@ public class AVLTreeMenu {
 		System.out.println("AVL Tree Menu");
 		System.out.println("'a' -- add a number");
 		System.out.println("'f' -- get family info");
-		System.out.println("'r' -- reverse AVL tree");
-		System.out.println("'l' -- print tree flipped");
+		System.out.println("'r' -- reverse tree");
+		System.out.println("'l' -- flip tree");
 		System.out.println("'i' -- initialize tree with random values");
 		System.out.println("'p' -- print AVL tree");
 		System.out.println("'s' -- print AVL tree stats");
