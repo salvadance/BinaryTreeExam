@@ -25,6 +25,12 @@ import java.util.Queue;
 
 public class AVLTree {
 
+/*==========================================================================================================================================
+ * 									[Inner Classes]
+ * Node class is private for internal workings
+ * InfoNode is to be imported in another class to get a node's information
+ * =========================================================================================================================================
+ */
 	/**
 	 * Represents a node in the AVL tree.
 	 * Each node contains a key value, references to left and right children,
@@ -53,6 +59,104 @@ public class AVLTree {
 		}
 	}
 	
+	/**
+	 * Class to get information about a binary tree node and encapsulating the Node class.
+	 * This was done to not give outside access to the Node class. Because family references can be changed which will break the binary tree
+	 * Has read only access once constructed. All fields are final once object is constructed with fields.
+	 * Mimics a Node but only stores values.
+	 * To be imported by another class to get info node
+	 */
+	public static class InfoNode {
+		final private Integer VALUE;
+		final private Integer PARENT_VALUE;
+		final private Integer LEFT_VALUE;
+		final private Integer RIGHT_VALUE;
+		final private int HEIGHT;
+		
+
+		/**
+		 * Default construct for InfoExtractor will have in a binary tree
+		 * Is for a null node of Node type
+		*/
+		public InfoNode() {
+			VALUE = null;
+			PARENT_VALUE = null;
+			LEFT_VALUE = null;
+			RIGHT_VALUE = null;
+			HEIGHT = -1;
+		}
+		
+		/**
+		 * Constructor that takes a Node parameter
+		 * Handles null nodes
+		 * @param node the node whose information are to be copied.
+		 */
+		private InfoNode(Node node) {
+			
+			//Case when node is not null
+			if (node != null) {
+				
+				//Copy node's value
+				VALUE = node.key;
+				
+				//Copy parent's value
+				PARENT_VALUE = node.parent != null? node.parent.key : null;
+				
+				//Copy left child's value
+				LEFT_VALUE = node.left != null? node.left.key : null;
+				
+				//Copy right child's value
+				RIGHT_VALUE = node.right != null? node.right.key : null;
+				
+				//Copy subtree's height
+				HEIGHT = node.height;
+			}
+			// Case when node is null
+			else {
+				VALUE = null;
+				PARENT_VALUE = null;
+				LEFT_VALUE = null;
+				RIGHT_VALUE = null;
+				HEIGHT = -1;
+			}
+		}
+
+		// Get its value including null
+		public Integer getValue() {
+			return VALUE;
+		}
+
+		// Gets it parent's value including null
+		public Integer getParent() {
+			return PARENT_VALUE;
+		}
+
+		// Get its left child's value including null
+		public Integer getLeftChildValue() {
+			return LEFT_VALUE;
+		}
+
+		// Get its right child value including null
+		public Integer getRightChildValue() {
+			return RIGHT_VALUE;
+		}
+
+		// Get its subtree's height
+		public int getSubtreeHeight() {
+			return HEIGHT;
+		}
+
+		// Checks if VALUE is null therefore making the node null;
+		public boolean isEmpty() {
+			return (VALUE == null);
+		}
+
+	}
+
+/*=============================================================================================================================
+ * 													AVLTree fields and constructor
+ * ========================================================================================================================
+ */
 	
 	private Node root; // The root node
 	private int numberOfValues; // Size of tree aka how many nodes with values does it have
@@ -66,11 +170,11 @@ public class AVLTree {
 	// Enum for direction of rotation
 	private enum Direction {Right, Left}
 
-/* **************************************************************************************************************
- * AVL Tree operations insert and remove 
+/* =============================================================================================================
+ * 							AVL Tree operations insert, search and remove 
  * 
- * *************************************************************************************************************
-*/
+ * ==============================================================================================================
+ */
 	/**
 	 * Inserts a node into the AVL tree and rebalances as needed
 	 * 
@@ -201,8 +305,37 @@ public class AVLTree {
 		
 		return true;
 	}
-
 	
+	/**
+	 * Iterative searches the AVL search tree to determine if key exists
+	 * Traverses the tree by comparing the search key with each node's key,
+	 * moving left for smaller values and right for larger values
+	 * 
+	 * @param key the value to search for in the tree
+	 * @return true if key exists in the tree, false otherwise
+	 */
+	private boolean BSTContains(int key) {
+		Node currNode = root; // start at the root
+
+		while (currNode != null) {
+			if (currNode.key == key) {
+				return true;
+			} else if (key < currNode.key) {
+				currNode = currNode.left;
+			} else {
+				currNode = currNode.right;
+			}
+		}
+
+		return false;
+	}
+
+/* ===================================================================================================================================================
+ * 										AVL tree balancing and rotation methods
+ * 
+ * 
+ * ====================================================================================================================================================	
+ */
 	/**
 	 * Rebalances an AVL tree node to maintain the balance property
 	 * 
@@ -390,29 +523,6 @@ public class AVLTree {
 		return leftHeight - rightHeight;
 	}
 
-	/**
-	 * Iterative searches the AVL search tree to determine if key exists
-	 * Traverses the tree by comparing the search key with each node's key,
-	 * moving left for smaller values and right for larger values
-	 * 
-	 * @param key the value to search for in the tree
-	 * @return true if key exists in the tree, false otherwise
-	 */
-	private boolean BSTContains(int key) {
-		Node currNode = root; // start at the root
-
-		while (currNode != null) {
-			if (currNode.key == key) {
-				return true;
-			} else if (key < currNode.key) {
-				currNode = currNode.left;
-			} else {
-				currNode = currNode.right;
-			}
-		}
-
-		return false;
-	}
 	
 	/** Method to get a node with a specific key value
 	 * @param node represents the current node
@@ -517,10 +627,7 @@ public class AVLTree {
 		}
 
 		if (node.key == key) { // Base Case: Node found with match key
-			Integer parent = node.parent != null ? node.parent.key : null;
-			Integer left = node.left != null ? node.left.key : null;
-			Integer right = node.right != null ? node.right.key : null;;
-			return new InfoNode(node.key, parent, left, right, node.height);
+			return new InfoNode(node);
 		}
 		else if (key < node.key) return BSTInfoSearch(node.left, key); // user's key less than node's key move to left child
 		else return BSTInfoSearch(node.right, key); // else move right

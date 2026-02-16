@@ -3,6 +3,7 @@ package binaryTreeExam;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import binaryTreeExam.AVLTree.InfoNode;
 
 
 
@@ -52,6 +53,10 @@ public class TreeDisplayer {
 		
 	}
 	
+/*==================================================================================================================================================
+ * 								Print tree methods
+ * ================================================================================================================================================
+ */
 	/**
 	 * Entry method to display AVL tree in flipped orientation, root is on bottom.
 	 * Checks if AVL tree is empty first an displays a message stating so.
@@ -272,30 +277,6 @@ public class TreeDisplayer {
 
 	}
 
-	
-	/**
-	 * Entry method to display AVL tree in normal orientation, root is on top.
-	 * Checks if AVL tree is empty first an displays a message stating so.
-	 * Calls method to fill the levelValues ArrayList
-	 * Based on isReversed value call appropriate method to display tree non-reversed or reversed
-	 * Finally clears array list.
-	 * @param isReversed if true that will call method that displays tree in reverse order bigger values on left and smaller values on right
-	 
-	public void printTreeNormalOrientation(boolean isReversed) {
-		
-		if (tree == null || tree.isEmpty()) { // Base case tree is empty
-			System.out.println("Tree is empty\n");
-			return;
-		}
-		
-		
-		addValuesToLevelValues(); // builds levelValues arraylist
-		
-		if (!isReversed) printTreeNormal(); // Call method to print tree normally 
-		else printTreeNormalReversed(); // else print tree reversed 
-		levelValues.clear();
-	}
-	*/
 
 	/**
 	 * Method that prints tree in flipped orientation, root on bottom, and with smaller values on left and bigger.
@@ -484,14 +465,35 @@ public class TreeDisplayer {
 	}
 	
 	/**
-	 * Menu method to get family information of a node based on user input key.
-	 * Prompts user to enter a key and retrieves the corresponding node's family information
+	 * Appends the given number to sb as a zero-padded 4-digit field.
+	 * For example, 7 becomes 0007 and  42} becomes 0042.
+	 *
+	 * @param sb the target buffer to append to
+	 * @param number the number to format (assumes 0..9999 for 4-digit padding)
+	 */
+	private void formatNumber(StringBuilder sb, int number) {
+		
+		if (number < 10) sb.append("000");
+		else if (number < 100) sb.append("00");
+		else if (number < 1000) sb.append("0");
+		sb.append(number);
+	}
+	
+/*================================================================================================================================================
+ * 													[Get node's info methods]
+ * 
+ * ===============================================================================================================================================
+ */
+	
+	/**
+	 * Menu method to get information of a node based on user input key.
+	 * Prompts user to enter a key and retrieves the corresponding node's information
 	 * (parent, left child, right child, height) until the user decides to quit by entering 'q'.
 	 * Handles invalid inputs gracefully by catching InputMismatchException.
 	 * 
 	 * @param scnr the Scanner object for reading user input
 	 */
-	public void menuGetFamily(Scanner scnr) {
+	public void menuGetNodeInfo(Scanner scnr) {
 		int key;
 		int userChar = 'a';
 		
@@ -544,11 +546,12 @@ public class TreeDisplayer {
 			System.out.print("[" + info.getValue() + "] :: ");
 	
 			// Parent
-			System.out.print("Parent: ");
-			if (info.getParent() != null)
-				System.out.print(info.getParent() + " || ");
-			else
-				System.out.print("NULL || ");
+			if (info.getParent() != null) {
+				System.out.print("Parent: " + info.getParent() + " || ");
+			}
+			else {
+				System.out.print("Is root || ");
+			}
 	
 			// Left child
 			System.out.print("Left: ");
@@ -575,7 +578,11 @@ public class TreeDisplayer {
 			System.out.println("Node with key [" + key + "] does not exist\n\n");
 		}
 	}
-	
+
+/*========================================================================================================================================
+ * 											[Get tree orders]
+ * =======================================================================================================================================
+ */
 	/** Public method to print the AVL tree's data in various orders:
 	 * In-order, reversed order, and original insertion order.
 	 * If the tree is empty, it prints "Empty Tree".
@@ -615,21 +622,5 @@ public class TreeDisplayer {
 		System.out.println("\n\n");
 	}
 	
-	
-	
-	/**
-	 * Appends the given number to sb as a zero-padded 4-digit field.
-	 * For example, 7 becomes 0007 and  42} becomes 0042.
-	 *
-	 * @param sb the target buffer to append to
-	 * @param number the number to format (assumes 0..9999 for 4-digit padding)
-	 */
-	private void formatNumber(StringBuilder sb, int number) {
-		
-		if (number < 10) sb.append("000");
-		else if (number < 100) sb.append("00");
-		else if (number < 1000) sb.append("0");
-		sb.append(number);
-	}
 	
 }

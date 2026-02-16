@@ -287,7 +287,7 @@ public class AVLTreeMenu {
 	private void handleSelection(char selection, Scanner scnr) { 
 		switch(selection) {
 			case 'a' -> addNumber(scnr);
-			case 'f' -> displayer.menuGetFamily(scnr);
+			case 'f' -> displayer.menuGetNodeInfo(scnr);
 			case 'r' -> reverseTree();
 			case 'l' -> flipTree();
 			case 'i' -> initializeTreeWithRandomNumbers();
