@@ -2,37 +2,6 @@
 
 A Java console application that implements a self-balancing AVL (Adelson-Velsky and Landis) binary search tree with advanced visualization capabilities.
 
-## Installation
-
-1. **Clone the repository**:
-   
-   ```bash
-   git clone https://github.com/salvadance/ClockSimulation.git
-   ```
-1. **Navigate to the project directory**:
-   
-   ```bash
-   cd BinaryTreeExam
-   ```
-1. **Compile the Java files**:
-   
-   ```bash
-   javac *.java
-   ```
-1. **Run the application**:
-   ```bash
-    java binaryTreeExam.BinaryTreeMenu
-   ```
-
-## Usage
-
-### Starting the Application
-
-Run the main class to start the interactive menu:
-    
-```bash
-java binaryTreeExam.BinaryTreeMenu
-```
 
 ## Overview
 
