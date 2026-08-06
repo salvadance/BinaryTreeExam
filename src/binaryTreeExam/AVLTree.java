@@ -24,6 +24,23 @@ import java.util.Queue;
 	
 
 public class AVLTree {
+/*=============================================================================================================================
+ * 													AVLTree fields and constructor
+ * 
+ * ========================================================================================================================
+ */
+	
+	private Node root; // The root node
+	private int numberOfValues; // Size of tree aka how many nodes with values does it have
+	
+
+	public AVLTree() {
+		root = null;
+		numberOfValues = 0;
+	}
+	
+	// Enum for direction of rotation
+	private enum Direction {Right, Left}
 
 /*==========================================================================================================================================
  * 									[Inner Classes]
@@ -153,22 +170,7 @@ public class AVLTree {
 
 	}
 
-/*=============================================================================================================================
- * 													AVLTree fields and constructor
- * ========================================================================================================================
- */
-	
-	private Node root; // The root node
-	private int numberOfValues; // Size of tree aka how many nodes with values does it have
-	
 
-	public AVLTree() {
-		root = null;
-		numberOfValues = 0;
-	}
-	
-	// Enum for direction of rotation
-	private enum Direction {Right, Left}
 
 /* =============================================================================================================
  * 							AVL Tree operations insert, search and remove 
