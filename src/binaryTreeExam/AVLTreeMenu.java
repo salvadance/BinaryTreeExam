@@ -45,18 +45,27 @@ public class AVLTreeMenu {
 		Random randG = new Random();
 		int numberOfNodes = (1 << 4) - 1;
 		int[] nums = new int[numberOfNodes];
-		//int treeHeight;
-	
+		
+		//Create an array of value inputs
 		for (int i = 0; i < numberOfNodes; i++) {
 			nums[i] = randG.nextInt(10000);
 		}
-
+		
+		//Create Heading
+		String outlineStr = "-".repeat(150);
+		System.out.println(outlineStr);
+		System.out.println("Creating AVL tree with random values");
+		System.out.println(outlineStr);
+		
+		//Display order of input
 		System.out.print("Orginal random input order: [");
+		
 		for (int num : nums) {
 			System.out.print(num + ", ");
 		}
 		System.out.println("]");
 
+		//Insert Random values
 		for (int num : nums) {
 			tree.insert(num);
 		}
@@ -260,7 +269,7 @@ public class AVLTreeMenu {
 			//Prompt user for a selection
 			System.out.println("Enter a selection: ");
 			userSelection = scnr.next().charAt(0);
-			System.out.println();
+			System.out.println("\n");
 			
 			handleSelection(userSelection, scnr); // Call helper method that handles user selection
 			
@@ -305,7 +314,7 @@ public class AVLTreeMenu {
 	private void printMenu() {
 		System.out.println("AVL Tree Menu");
 		System.out.println("'a' -- add a number");
-		System.out.println("'f' -- get family info");
+		System.out.println("'f' -- get node info");
 		System.out.println("'r' -- reverse tree");
 		System.out.println("'l' -- flip tree");
 		System.out.println("'i' -- initialize tree with random values");
