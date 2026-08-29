@@ -129,8 +129,6 @@ public class TreeDisplayer {
 		final String SPACE = " ".repeat(BLOCK_SPACE_AMOUNT); // A space - 4 character spaces
 
 		treeHeight = tree.getTreeHeight();
-		betweenNodesAmount = 0; // initial value is zero because first number is the root
-		levelNums = 1; 
 
 		
 		levelNums = 1 << treeHeight; //Calculate total possible number of values in current level

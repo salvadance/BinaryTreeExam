@@ -207,15 +207,18 @@ public class AVLTree {
 					cur.left = node;
 					node.parent = cur;
 					cur = null;
-				} else {
+				} 
+				else {
 					cur = cur.left; // else traverse to current node's left child
 				}
-			} else { // else parameter node's key is greater than current nodes
+			} 
+			else { // else parameter node's key is greater than current nodes
 				if (cur.right == null) { // If current node's right child is null set it the parameter node as that child
 					cur.right = node;
 					node.parent = cur;
 					cur = null;
-				} else
+				} 
+				else
 					cur = cur.right; // else traverse to right child of current node
 			}
 		}
